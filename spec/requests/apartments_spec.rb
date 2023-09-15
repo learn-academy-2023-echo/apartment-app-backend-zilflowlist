@@ -65,4 +65,80 @@ RSpec.describe "Apartments", type: :request do
     expect(apartment.user_id).to eq user.id 
     end
   end
+
+  describe "PATCH /update" do
+    it "updates an apartment" do
+      apartment_params = {
+      apartment: {
+        street: 'Test Lane',
+        unit: '7',
+        city: 'San Deegleby',
+        state: 'CA',
+        square_footage: 800,
+        price: '3,500',
+        bedrooms: 2,
+        bathrooms: 1.5,
+        pets: 'yes',
+        image: 'https://plus.unsplash.com/premium_photo-1672252617539-878656f17efe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80',
+        user_id: user.id
+    }
+  }
+    post '/apartments', params: apartment_params
+
+    apartment = Apartment.first
+        update_apartment_params = {
+        apartment: {
+          street: 'Test Lane',
+          unit: '7',
+          city: 'San Deegleby',
+          state: 'CA',
+          square_footage: 850,
+          price: '3,500',
+          bedrooms: 2,
+          bathrooms: 1.5,
+          pets: 'yes',
+          image: 'https://plus.unsplash.com/premium_photo-1672252617539-878656f17efe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80',
+          user_id: user.id
+          }
+        }
+
+        patch "/apartments/#{apartment.id}", params: update_apartment_params
+        updated_apartment = Apartment.find(apartment.id)
+
+        expect(updated_apartment.square_footage).to eq 850
+    end
+  end
+
+  describe 'DELETE /destroy' do
+    it 'deletes an apartment' do 
+      apartment_params = {
+      apartment: {
+        street: 'Test Lane',
+        unit: '7',
+        city: 'San Deegleby',
+        state: 'CA',
+        square_footage: 800,
+        price: '3,500',
+        bedrooms: 2,
+        bathrooms: 1.5,
+        pets: 'yes',
+        image: 'https://plus.unsplash.com/premium_photo-1672252617539-878656f17efe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80',
+        user_id: user.id
+    }
+  }
+
+      post '/apartments', params: apartment_params
+
+      apartment = Apartment.first
+
+      delete "/apartments/#{apartment.id}"
+
+      expect(response).to have_http_status(200)
+
+      apartments = Apartment.all
+
+      expect(apartments).to be_empty
+    end
+  end
+
 end
